@@ -2,7 +2,7 @@
 ; Serial LED Tape (WS2818B) test program
 ; for AVR ATmega168,328
 ; clock 20MHz
-; 2014-01-05 by penkich
+; 2015-01-05 by penkich
 ;
 .include "m168def.inc"
 .org 0x00 jmp reset
