@@ -104,7 +104,7 @@ uarts:
 
 main:
     cli
-    ldi r16, 10
+    ldi r16, 10     ;115200bps
     sts ubrr0l, r16
     ldi r16, 0
     sts ubrr0h, r16
