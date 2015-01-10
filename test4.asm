@@ -16,7 +16,7 @@ reset:
     ldi r20,0b11111110 ; low
     ldi r21,0b11111111 ; high
 datain:
-    jump main
+    jmp main
 
 led:
     push r16
