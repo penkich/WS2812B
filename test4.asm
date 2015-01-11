@@ -5,6 +5,8 @@
 ; 2015-01-10 UART test by penkich
 ;
 .include "m168def.inc"
+.equ n1 = 8  ;
+.equ n2 = 128 ;n1 * n2 = 1k byte
 .org 0x00 jmp reset
 reset:
     ldi r16,low(ramend)
@@ -15,9 +17,12 @@ reset:
     out ddrb,r16
     ldi r20,0b11111110 ; low
     ldi r21,0b11111111 ; high
+ ldi xh,0x01 ;x <- 0x0100
+ ldi xl,0x00
+ ldi r17, n1
+ ldi r19, n2
 datain:
     jmp main
-
 led:
     push r16
     in r16,sreg
@@ -75,7 +80,6 @@ return:
     ret             ;4
 iloop:
     rjmp reset
-
                     ;rcall  ;3
 delay10us:
     push r16        ;2
@@ -94,17 +98,15 @@ loop_10us:
     pop r16         ;2
     nop             ;1
     ret             ;4
-
 uarts:
     lds r16, ucsr0a
     sbrs r16, udre0
     rjmp uarts
     sts udr0, r22
     ret
-
 main:
     cli
-    ldi r16, 10     ;115200bps
+    ldi r16, 10
     sts ubrr0l, r16
     ldi r16, 0
     sts ubrr0h, r16
@@ -115,18 +117,42 @@ main:
     sbr r16, ((1<<rxen0)+(1<<txen0))
     sts ucsr0b, r16
     sei
+ ldi r17, n1
+loop3:
+ ldi r19, n2
 main01:
+loop4:
     lds r16, ucsr0a
     sbrs r16, rxc0
     rjmp main01
     lds r22, udr0
-    cpi r22, 'a'
-    breq main02
+ st x+, r22
+ cpi r22, 0x0d
+ breq loop_out 
     rcall uarts
-    rjmp main01
-main02:
-    ldi r22, 0b00001111
-    rcall led
-    rcall delay10us
-    rcall uarts
-    rjmp main01
+ dec r19
+ cpi r19,0
+ brne loop4
+ dec r17
+ brne loop3
+ ldi xh,0x01 ;x <- 0x0100
+ ldi xl,0x00
+loop_out:
+ ldi r17, n1
+loop1:
+ ldi r19, n2
+loop2:
+ ld r22,x+
+ cpi r22, 0x0d
+ breq out_led
+ ldi r16,0b00001111
+ and r22,r16
+ rcall led
+ dec r19
+ cpi r19,0
+ brne loop2
+ dec r17
+ brne loop1
+out_led:
+ rcall delay10us
+    jmp reset
