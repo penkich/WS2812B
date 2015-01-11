@@ -17,10 +17,10 @@ reset:
     out ddrb,r16
     ldi r20,0b11111110 ; low
     ldi r21,0b11111111 ; high
- ldi xh,0x01 ;x <- 0x0100
- ldi xl,0x00
- ldi r17, n1
- ldi r19, n2
+    ldi xh,0x01 ;x <- 0x0100
+    ldi xl,0x00
+    ldi r17, n1
+    ldi r19, n2
 datain:
     jmp main
 led:
@@ -60,7 +60,7 @@ j0_1:
 j1:
     out portb,r21
     push r16        ;2
- ldi r16,2          ;1
+    ldi r16,2       ;1
 j1_1:
     dec r16         ;1
     cpi r16,0       ;1
@@ -117,42 +117,42 @@ main:
     sbr r16, ((1<<rxen0)+(1<<txen0))
     sts ucsr0b, r16
     sei
- ldi r17, n1
+    ldi r17, n1
 loop3:
- ldi r19, n2
+    ldi r19, n2
 main01:
 loop4:
     lds r16, ucsr0a
     sbrs r16, rxc0
     rjmp main01
     lds r22, udr0
- st x+, r22
- cpi r22, 0x0d
- breq loop_out 
+    st x+, r22
+    cpi r22, 0x0d
+    breq loop_out 
     rcall uarts
- dec r19
- cpi r19,0
- brne loop4
- dec r17
- brne loop3
- ldi xh,0x01 ;x <- 0x0100
- ldi xl,0x00
+    dec r19
+    cpi r19,0
+    brne loop4
+    dec r17
+    brne loop3
+    ldi xh,0x01 ;x <- 0x0100
+    ldi xl,0x00
 loop_out:
- ldi r17, n1
+    ldi r17, n1
 loop1:
- ldi r19, n2
+    ldi r19, n2
 loop2:
- ld r22,x+
- cpi r22, 0x0d
- breq out_led
- ldi r16,0b00001111
- and r22,r16
- rcall led
- dec r19
- cpi r19,0
- brne loop2
- dec r17
- brne loop1
-out_led:
- rcall delay10us
+    ld r22,x+
+    cpi r22, 0x0d
+    breq out_led
+    ldi r16,0b00001111
+    and r22,r16
+    rcall led
+    dec r19
+    cpi r19,0
+    brne loop2
+    dec r17
+    brne loop1
+    out_led:
+    rcall delay10us
     jmp reset
