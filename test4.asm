@@ -2,7 +2,7 @@
 ; Serial LED Tape (WS2818B) test program
 ; for AVR ATmega168,328
 ; clock 20MHz
-; 2015-01-10 UART test by penkich
+; 2015-01-11 UART test by penkich
 ;
 .include "m168def.inc"
 .equ n1 = 8  ;
