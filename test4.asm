@@ -153,6 +153,6 @@ loop2:
     brne loop2
     dec r17
     brne loop1
-    out_led:
+out_led:
     rcall delay10us
     jmp reset
