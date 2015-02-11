@@ -34,7 +34,6 @@ led:
     ldi r18,9       ;loop counter
 loop:
     dec r18         ;1
-    cpi r18,0       ;1
     breq return     ;1/2
     out portb,r20   ;1    portb =0
     lsl r22         ;1    move 1 bit from top to carry
@@ -44,9 +43,8 @@ j0:
     nop             ;
     nop             ;
     nop             ;
-    nop             ;
-    nop             ;5 nop
-    out portb,r20   ;1    portb =0
+    nop             ;4 nop
+	out portb,r20   ;1    portb =0
 j0_1:
     nop             ;
     nop             ;
@@ -63,9 +61,7 @@ j1:
 	nop
 	nop
 	nop
-	nop
-	nop
-	nop				;10 nop
+	nop				;8 nop
     out portb,r20   ;1    portb =0
     rjmp loop		;2    2 clock
 return:
@@ -139,7 +135,6 @@ loop4:
     breq loop_out ;   if data = 'CR'
     rcall uarts
     dec r19
-    cpi r19,0
     brne loop4
     dec r17
     brne loop3
@@ -162,6 +157,7 @@ loop2:
 	lsl r24
 	lsl r24     ;
 	add r22,r24	;   r22 + r24*16 -> r22
+; 	ldi r22, 5
     rcall led   ;   data send to LED 
 	ldi r23,0
 	rjmp f1
@@ -169,10 +165,10 @@ f0:
 	ldi r23,1   ;   set flag
 	mov r24,r22
 f1:
-    cpi r19,0
+	dec r19
     brne loop2
     dec r17
-    brne loop1
+	brne loop1
 ;---------------------------
 ; stop data and wait
 ;---------------------------
