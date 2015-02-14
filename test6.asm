@@ -1,12 +1,12 @@
 ;
 ; Serial LED Tape (WS2818B) test program
-; for AVR ATmega168,328
+; for AVR ATmega328
 ; clock 12MHz
 ; 2015-02-11 UART test by penkich
 ;
 .include "m328def.inc"
-.equ n1 = 8  ;
-.equ n2 = 128 ;n1 * n2 = 1k byte
+.equ n1 = 16  ;
+.equ n2 = 128 ;n1 * n2 = 2k byte
 .org 0x00 jmp reset
 ;---------------------------
 ; reset
