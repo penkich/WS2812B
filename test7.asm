@@ -119,28 +119,25 @@ main:
 	ldi r16,0x40    ;    slave
 	out spcr,r16
 	sei
-spi_01:
-	ldi r16,spsr
-	sbrs r16,spif
-	rjmp spi_01
-	mov r22,r16 
 ;---------------------------
+; Receive from Master
     ldi xh,0x01 ;x <- 0x0100
     ldi xl,0x00
     ldi r17, n1
 loop3:
     ldi r19, n2
 loop4:
+spi_02:
+	in r16,spsr
+	sbrs r16,spif
+	rjmp spi_02
+	in  r16,spdr
+	mov r22,r16 
+
     mov r16, r22  ;   r22 -> r16
     st x+, r16    ;   store data to RAM
     cpi r16, 0x0d ;
     breq disp     ;   if data = 'CR'
-;    rcall uarts
-spi_02:
-	ldi r16,spsr
-	sbrs r16,spif
-	rjmp spi_02
-	mov r22,r16 
 
     dec r19
     brne loop4
