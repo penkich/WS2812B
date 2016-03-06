@@ -3,7 +3,7 @@
 ; for AVR ATmega328
 ; clock 12MHz
 ; 2015-05-21 SPI test by penkich
-; 0xFF must be send as the end of SPI data
+; 0xFF must be sent as the end of SPI data
 ;
 .include "m328def.inc"
 .equ n1 = 16  ;
