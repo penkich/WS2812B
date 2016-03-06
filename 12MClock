@@ -3,6 +3,7 @@
 ; for AVR ATmega328
 ; clock 12MHz
 ; 2015-05-21 SPI test by penkich
+; 0xFF must be the end of SPI data
 ;
 .include "m328def.inc"
 .equ n1 = 16  ;
@@ -42,30 +43,30 @@ j0:
     out portb,r21   ;1    portb =1
     nop             ;
     nop
-	nop
+    nop
     nop             ;4 nop
-	out portb,r20   ;1    portb =0
+    out portb,r20   ;1    portb =0
 j0_1:
     nop             ;
     nop             ;
-	nop
+    nop
     nop             ;4 nop
     rjmp loop       ;5+2= 7 clock
 j1:
     out portb,r21   ;     portb =1
-	nop
     nop
     nop
     nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop				;11 nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop	            ;11 nop
     out portb,r20   ;1    portb =0
-    rjmp loop		;2    2 clock
+    rjmp loop       ;2    2 clock
 return:
     out portb,r20   ;1    portb =0
     ret             ;4
@@ -85,13 +86,13 @@ loop_10us:
     brne loop_10us  ;1/2
     pop r16         ;2
     out sreg,r16    ;1
-	pop r16         ;2
-	nop             ;1
-	nop             ;1
-	nop             ;1
+    pop r16         ;2
+    nop             ;1
+    nop             ;1
+    nop             ;1
     ret             ;4
 ;---------------------------
-; uarts
+; uarts(not called)
 ;---------------------------
 uarts:
     lds r16, ucsr0a
@@ -118,9 +119,9 @@ main:
     sts ucsr0b, r16
 
 ; SPI conf
-	ldi r16,0x40    ;    slave
-	out spcr,r16
-	sei
+    ldi r16,0x40    ;    slave
+    out spcr,r16
+    sei
 ;---------------------------
 ; Receive from Master
 start:
@@ -131,11 +132,11 @@ loop3:
     ldi r19, n2
 loop4:
 spi_02:
-	in r16,spsr
-	sbrs r16,spif
-	rjmp spi_02
-	in  r16,spdr
-	mov r22,r16 
+    in r16,spsr
+    sbrs r16,spif
+    rjmp spi_02
+    in  r16,spdr
+    mov r22,r16 
 
     mov r16, r22  ;   r22 -> r16
     st x+, r16    ;   store data to RAM
@@ -158,36 +159,36 @@ loop2:
     cpi r22, 0xff
     breq end    ;   if data = 'FF'
     rcall genpulse   ;   data send to LED 
-	dec r19
+    dec r19
     brne loop2
     dec r17
-	brne loop1
+    brne loop1
 ;---------------------------
 ; stop sending data and wait
 ;---------------------------
 end:
     rcall delay10us
-	rcall delay10us
-	rcall delay10us
-	rcall delay10us
-	rcall delay10us
+    rcall delay10us
+    rcall delay10us
+    rcall delay10us
+    rcall delay10us
     jmp start
 ;---------------------------
-; chaconv
+; chaconv (not called)
 ;   in:  r16('0','1',...'A','B',...'F')
 ;   ret: r16(0,1,,,,10,11,...15)
 ;---------------------------
 chaconv:
     push r16
     andi r16, 0b00001111
-	mov r17, r16
-	pop r16
-	andi r16, 0b01000000
-	cpi r16,0
-	brne ch1
-	mov r16, r17
-	ret
+    mov r17, r16
+    pop r16
+    andi r16, 0b01000000
+    cpi r16,0
+    brne ch1
+    mov r16, r17
+    ret
 ch1:
     ldi r16, 0x9
     add r16, r17
-	ret
+    ret
